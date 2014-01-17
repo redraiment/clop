@@ -1,0 +1,11 @@
+(name, age, salary) -> {
+  adjust: {
+    if (salary < 30000) {
+      salary += [1 + 299] * 10
+    }
+  }
+} as Employee
+
+File("data.clop") read() each[(e) -> {
+  e adjust()
+}] print()

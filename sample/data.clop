@@ -1,0 +1,5 @@
+(
+  Employee(name: "Joe", age: 23, salary: 10000)
+  Employee(name: "Redraiment", age: 24, salary: 17000)
+  Employee(name: "Zhang, Zepeng", age: 25, salary: 27000)
+)
