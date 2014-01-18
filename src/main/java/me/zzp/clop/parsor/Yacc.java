@@ -21,7 +21,7 @@ public final class Yacc implements Iterator<ClopCode> {
     return !pool.isEmpty();
   }
 
-  private ClopStatement nextStatement() throws ParseException {
+  private ClopStatement nextStatement() {
     ClopStatement line = new ClopStatement();
     while (hasNext()) {
       String token = pool.poll();
@@ -50,7 +50,7 @@ public final class Yacc implements Iterator<ClopCode> {
     return line;
   }
 
-  private ClopCode nextCode(String end) throws ParseException {
+  private ClopCode nextCode(String end) {
     ClopCode code = new ClopCode();
     for (boolean finish = false; !finish && hasNext();) {
       ClopStatement statement = nextStatement();

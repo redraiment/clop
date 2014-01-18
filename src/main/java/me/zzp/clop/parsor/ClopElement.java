@@ -32,7 +32,7 @@ public final class ClopElement {
     if (is(Type.Atom)) {
       return atom;
     } else {
-      throw new UnsupportedOperationException("The element is not an atom");
+      throw new ParseException("The element is not an atom");
     }
   }
 
@@ -40,7 +40,7 @@ public final class ClopElement {
     if (!is(Type.Atom)) {
       return list;
     } else {
-      throw new UnsupportedOperationException("The element is not a list");
+      throw new ParseException("The element is not a list");
     }
   }
 

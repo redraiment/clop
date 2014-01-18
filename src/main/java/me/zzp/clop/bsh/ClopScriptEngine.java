@@ -2,7 +2,6 @@ package me.zzp.clop.bsh;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.math.BigInteger;
 import javax.script.AbstractScriptEngine;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
