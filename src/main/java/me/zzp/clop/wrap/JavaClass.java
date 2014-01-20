@@ -1,6 +1,7 @@
-package me.zzp.clop.runtime;
+package me.zzp.clop.wrap;
 
-import me.zzp.clop.parsor.ClopElement;
+import me.zzp.clop.Any;
+import me.zzp.clop.Symbol;
 
 public final class JavaClass extends JavaObject {
   private final String className;
@@ -19,9 +20,9 @@ public final class JavaClass extends JavaObject {
   }
 
   @Override
-  public Lambda send(ClopElement e) {
-    if (e.is(ClopElement.Type.Atom)) {
-      return super.send(e);
+  public Any pass(Any thing) {
+    if (thing instanceof Symbol) {
+      return super.pass(thing);
     } else {
       return nil;
     }

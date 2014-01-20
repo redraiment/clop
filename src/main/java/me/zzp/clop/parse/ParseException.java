@@ -1,4 +1,4 @@
-package me.zzp.clop.parsor;
+package me.zzp.clop.parse;
 
 public final class ParseException extends RuntimeException {
   public ParseException(String message) {

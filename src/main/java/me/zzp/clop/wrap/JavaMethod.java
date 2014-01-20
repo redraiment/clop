@@ -1,9 +1,11 @@
-package me.zzp.clop.runtime;
+package me.zzp.clop.wrap;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import me.zzp.clop.parsor.ClopElement;
+import me.zzp.clop.Any;
+import me.zzp.clop.NunEval;
+import me.zzp.clop.Nil;
 
 public final class JavaMethod extends Nil {
   private final Object javaObject;
@@ -19,12 +21,11 @@ public final class JavaMethod extends Nil {
   }
 
   @Override
-  public Lambda send(ClopElement e) {
-    if (e.is(ClopElement.Type.EvalList)) {
-      
+  public Any pass(Any thing) {
+    if (thing instanceof NunEval) {
     } else {
-      return super.send(e);
+      return super.pass(thing);
     }
-    return super.send(e);
+    return super.pass(thing);
   }
 }

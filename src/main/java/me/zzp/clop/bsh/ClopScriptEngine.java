@@ -7,9 +7,8 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
-import me.zzp.clop.Clop;
-import me.zzp.clop.parsor.Lex;
-import me.zzp.clop.parsor.Yacc;
+import me.zzp.clop.parse.Lex;
+import me.zzp.clop.parse.Yacc;
 
 public final class ClopScriptEngine extends AbstractScriptEngine {
   private final ScriptEngineFactory factory;
@@ -35,7 +34,7 @@ public final class ClopScriptEngine extends AbstractScriptEngine {
   public Object eval(String line, ScriptContext context) throws ScriptException {
     try {
       lex.append(line).append("\n");
-      return Clop.eval(yacc.next());
+      return yacc.next();
     } catch (IOException e) {
       System.err.println("ClopScriptEngine.eval(String, ScriptContext)");
       System.err.println(e.getMessage());
@@ -70,7 +69,7 @@ public final class ClopScriptEngine extends AbstractScriptEngine {
       throw new ScriptException(e);
     }
 
-    Object result = Clop.eval(yacc.next());
+    Object result = yacc.next();
     if (yacc.hasNext()) {
       throw new ScriptException("Parse file failed.");
     }

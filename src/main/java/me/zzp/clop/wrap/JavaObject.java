@@ -1,4 +1,4 @@
-package me.zzp.clop.runtime;
+package me.zzp.clop.wrap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import me.zzp.clop.parsor.ClopElement;
+import me.zzp.clop.Any;
+import me.zzp.clop.Nil;
+import me.zzp.clop.Symbol;
 
 public class JavaObject extends Nil {
   protected final Object javaObject;
@@ -46,20 +48,20 @@ public class JavaObject extends Nil {
   }
 
   @Override
-  public Lambda send(ClopElement message) {
-    if (message.is(ClopElement.Type.Atom)) {
+  public Any pass(Any thing) {
+    if (thing instanceof Symbol) {
       // eval
-      String name = message.atom();
+      String name = thing.toString();
       if (field.containsKey(name)) {
         Field f = field.get(name);
         try {
           return new JavaObject(f.get(javaObject));
         } catch (IllegalArgumentException | IllegalAccessException ex) {
-          return super.send(message);
+          return super.pass(thing);
         }
       }
     } else {
-      return super.send(message);
+      return super.pass(thing);
     }
 
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

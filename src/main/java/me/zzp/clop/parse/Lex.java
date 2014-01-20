@@ -1,9 +1,9 @@
-package me.zzp.clop.parsor;
+package me.zzp.clop.parse;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.regex.Matcher;
-import me.zzp.clop.parsor.Token.Type;
+import me.zzp.clop.parse.Token.Type;
 
 public final class Lex implements Iterator<String>, Appendable {
   private final static Token[] MODEL = new Token[] {
@@ -31,10 +31,6 @@ public final class Lex implements Iterator<String>, Appendable {
     return code.length() > 0;
   }
 
-  /**
-   * Returns next word.
-   * @return next word.
-   */
   @Override
   public String next() {
     while (hasNext()) {

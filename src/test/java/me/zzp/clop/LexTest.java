@@ -1,7 +1,7 @@
 package me.zzp.clop;
 
 import java.util.Iterator;
-import me.zzp.clop.parsor.Lex;
+import me.zzp.clop.parse.Lex;
 
 public class LexTest {
   public static void dump(Iterator<String> it) {

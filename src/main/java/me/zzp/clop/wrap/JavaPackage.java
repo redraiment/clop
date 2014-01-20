@@ -1,6 +1,8 @@
-package me.zzp.clop.runtime;
+package me.zzp.clop.wrap;
 
-import me.zzp.clop.parsor.ClopElement;
+import me.zzp.clop.Any;
+import me.zzp.clop.Nil;
+import me.zzp.clop.Symbol;
 
 public class JavaPackage extends Nil {
   private final String name;
@@ -10,9 +12,9 @@ public class JavaPackage extends Nil {
   }
 
   @Override
-  public Lambda send(ClopElement e) {
-    if (e.is(ClopElement.Type.Atom)) {
-      String message = e.atom();
+  public Any pass(Any thing) {
+    if (thing instanceof Symbol) {
+      String message = thing.toString();
       String path = name.concat(".").concat(message);
       if (Character.isUpperCase(message.charAt(0))) {
         try {
