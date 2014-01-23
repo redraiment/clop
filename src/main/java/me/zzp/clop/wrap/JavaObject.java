@@ -1,74 +1,64 @@
 package me.zzp.clop.wrap;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import me.zzp.clop.Any;
-import me.zzp.clop.Nil;
-import me.zzp.clop.Symbol;
+import me.zzp.clop.read.Symbol;
+import me.zzp.clop.run.NunEval;
 
-public class JavaObject extends Nil {
+public class JavaObject extends NunEval {
   protected final Object javaObject;
 
-  protected final List<Constructor> constructor;
-  protected final Map<String, JavaMethod> method;
-  protected final Map<String, Field> field;
-
   public JavaObject(Object javaObject) {
-    this.javaObject = javaObject;
+    super();
 
-    constructor = new LinkedList<>();
-    method = new HashMap<>();
-    field = new HashMap<>();
+    this.javaObject = javaObject;
     prepare(javaObject.getClass());
   }
 
+  public final Object raw() {
+    return javaObject;
+  }
+
   protected final void prepare(Class<?> javaClass) {
-    constructor.addAll(Arrays.asList(javaClass.getConstructors()));
-    
+    for (Field f : javaClass.getFields()) {
+      add(f.getName(), new JavaField(javaObject, f));
+    }
+
     for (Method m : javaClass.getMethods()) {
       String name = m.getName();
       JavaMethod wrapper;
-      if (method.containsKey(name)) {
-        wrapper = method.get(name);
+      if (contains(name)) {
+        wrapper = (JavaMethod) get(name);
       } else {
         wrapper = new JavaMethod(javaObject);
-        method.put(name, wrapper);
+        add(name, wrapper);
       }
-    }
-
-    for (Field f : javaClass.getFields()) {
-      field.put(f.getName(), f);
+      wrapper.add(m);
     }
   }
 
   @Override
   public Any pass(Any thing) {
     if (thing instanceof Symbol) {
-      // eval
       String name = thing.toString();
-      if (field.containsKey(name)) {
-        Field f = field.get(name);
-        try {
-          return new JavaObject(f.get(javaObject));
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
-          return super.pass(thing);
-        }
+
+      if (contains(name)) {
+        Any object = get(name);
+        return object.pass(thing);
       }
-    } else {
-      return super.pass(thing);
     }
 
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return super.pass(thing);
   }
 
   @Override
   public String toString() {
     return javaObject.toString();
+  }
+
+  @Override
+  public String toString(int offset) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 }

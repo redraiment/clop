@@ -1,6 +1,5 @@
 package me.zzp.clop;
 
-public interface Any {
+public interface Any extends PrettyPrint, Compilable {
   public Any pass(Any thing);
-  public String toString(int offset);
 }

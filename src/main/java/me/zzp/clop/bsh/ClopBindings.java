@@ -11,15 +11,15 @@ import javax.script.Bindings;
  * @author redraiment
  */
 public final class ClopBindings implements Bindings {
-  private final ClopBindings parent;
+  private final Bindings lexical;
   private final Map<String, Object> scope;
 
   public ClopBindings() {
     this(null);
   }
 
-  public ClopBindings(ClopBindings parent) {
-    this.parent = parent;
+  public ClopBindings(Bindings lexical) {
+    this.lexical = lexical;
     this.scope = new HashMap<>();
   }
 
@@ -35,13 +35,13 @@ public final class ClopBindings implements Bindings {
 
   @Override
   public boolean containsKey(Object key) {
-    return scope.containsKey(key) || (parent != null && parent.containsKey(key));
+    return scope.containsKey(key) || (lexical != null && lexical.containsKey(key));
   }
 
   @Override
   public Object get(Object key) {
     Object value = scope.get(key);
-    return value != null? value: (parent != null? parent.get(key): null);
+    return value != null? value: (lexical != null? lexical.get(key): null);
   }
 
   @Override
@@ -61,7 +61,7 @@ public final class ClopBindings implements Bindings {
 
   @Override
   public boolean containsValue(Object value) {
-    return scope.containsValue(value) || (parent != null && parent.containsValue(value));
+    return scope.containsValue(value) || (lexical != null && lexical.containsValue(value));
   }
 
   @Override

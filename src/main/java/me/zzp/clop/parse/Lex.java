@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import me.zzp.clop.parse.Token.Type;
 
-public final class Lex implements Iterator<String>, Appendable {
+final class Lex implements Iterator<String>, Appendable {
   private final static Token[] MODEL = new Token[] {
     new Token(Type.Comment, "#.*"),
     new Token(Type.Value, "\"[^\\\\\"]*(?:\\\\.[^\\\\\"]*)*\""),
@@ -18,11 +18,11 @@ public final class Lex implements Iterator<String>, Appendable {
 
   private final StringBuilder code;
 
-  public Lex() {
+  Lex() {
     this("");
   }
 
-  public Lex(String code) {
+  Lex(String code) {
     this.code = new StringBuilder(code);
   }
 

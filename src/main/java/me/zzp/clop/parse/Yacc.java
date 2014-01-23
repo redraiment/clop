@@ -1,19 +1,21 @@
 package me.zzp.clop.parse;
 
-import me.zzp.clop.Statement;
+import java.io.IOException;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
+import me.zzp.clop.Compilable;
+import me.zzp.clop.read.Reader;
 
-public final class Yacc implements Iterator<Statement> {
-  private final Iterator<String> source;
+public final class Yacc implements Iterator<Compilable>, Appendable {
   private final Deque<String> embed;
   private final Deque<String> pool;
+  private final Lex lex;
 
-  public Yacc(Iterator<String> soruce) {
+  public Yacc() {
     this.embed = new LinkedList<>();
     this.pool = new LinkedList<>();
-    this.source = soruce;
+    this.lex = new Lex();
   }
 
   @Override
@@ -21,11 +23,9 @@ public final class Yacc implements Iterator<Statement> {
     return !pool.isEmpty();
   }
 
-  @Override
-  public Statement next() {
-    enough:
-    while (source.hasNext()) {
-      String token = source.next();
+  public void pull() {
+    while (lex.hasNext()) {
+      String token = lex.next();
       if (token == null)
         continue;
 
@@ -53,20 +53,43 @@ public final class Yacc implements Iterator<Statement> {
           break;
         case ",":
           if (embed.isEmpty())
-            break enough;
+            return;
       }
     }
+  }
+  
+  @Override
+  public Compilable next() {
+    pull();
 
-    Statement line = null;
+    Compilable compiler = null;
     if (embed.isEmpty() && !pool.isEmpty()) {
-      line = Statement.read(pool);
+      compiler = Reader.read(pool);
       pool.clear();
     }
-    return line;
+    return compiler;
   }
 
   @Override
   public void remove() {
     throw new UnsupportedOperationException("Yacc.remove");
+  }
+
+  @Override
+  public Appendable append(CharSequence snippet) throws IOException {
+    lex.append(snippet);
+    return this;
+  }
+
+  @Override
+  public Appendable append(CharSequence snippet, int start, int end) throws IOException {
+    lex.append(snippet, start, end);
+    return this;
+  }
+
+  @Override
+  public Appendable append(char snippet) throws IOException {
+    lex.append(snippet);
+    return this;
   }
 }

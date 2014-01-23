@@ -7,73 +7,73 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
-import me.zzp.clop.parse.Lex;
 import me.zzp.clop.parse.Yacc;
+import me.zzp.clop.Compilable;
+import me.zzp.clop.Any;
 
 public final class ClopScriptEngine extends AbstractScriptEngine {
   private final ScriptEngineFactory factory;
   private final Yacc yacc;
-  private final Lex lex;
 
   public ClopScriptEngine(ScriptEngineFactory factory) {
     super(new ClopBindings());
 
     this.factory = factory;
-    lex = new Lex();
-    yacc = new Yacc(lex);
+    yacc = new Yacc();
   }
 
-  /**
-   * REPL.
-   * @param line
-   * @param context
-   * @return
-   * @throws ScriptException 
-   */
+  /* REPL */
   @Override
-  public Object eval(String line, ScriptContext context) throws ScriptException {
+  public Object eval(String snippet, ScriptContext context) throws ScriptException {
     try {
-      lex.append(line).append("\n");
-      return yacc.next();
+      yacc.append(snippet).append('\n');
+      Compilable code = yacc.next();
+      if (code != null) {
+        Any object = code.compile(context.getBindings(ScriptContext.ENGINE_SCOPE));
+        return object.pass(null);
+      }
     } catch (IOException e) {
       System.err.println("ClopScriptEngine.eval(String, ScriptContext)");
       System.err.println(e.getMessage());
       throw new ScriptException(e);
     }
+
+    return null;
   }
 
-  /**
-   * Execute file.
-   * @param reader
-   * @param context
-   * @return
-   * @throws ScriptException 
-   */
+  /* Execute file */
   @Override
-  public Object eval(Reader reader, ScriptContext context) throws ScriptException {
-    StringBuilder code = new StringBuilder();
-    char[] buffer = new char[512];
-
+  public Object eval(Reader soruce, ScriptContext context) throws ScriptException {
     try {
+      StringBuilder code = new StringBuilder();
+      char[] snippet = new char[512];
+
       while (true) {
-        int len = reader.read(buffer);
+        int len = soruce.read(snippet);
         if (len <= 0) {
           break;
         }
-        code.append(buffer);
+        code.append(snippet);
       }
-      lex.append(code.toString());
+
+      yacc.append(code);
     } catch (IOException e) {
       System.err.println("ClopScriptEngine.eval(Reader, ScriptContext)");
       System.err.println(e.getMessage());
       throw new ScriptException(e);
     }
 
-    Object result = yacc.next();
-    if (yacc.hasNext()) {
-      throw new ScriptException("Parse file failed.");
+    Bindings scope = context.getBindings(ScriptContext.ENGINE_SCOPE);
+    while (yacc.hasNext()) {
+      Compilable code = yacc.next();
+      if (code != null) {
+        code.compile(scope).pass(null);
+      } else {
+        throw new ScriptException("Parse file failed.");
+      }
     }
-    return result;
+
+    return null;
   }
 
   @Override

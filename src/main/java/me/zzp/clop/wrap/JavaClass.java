@@ -1,21 +1,15 @@
 package me.zzp.clop.wrap;
 
+import static me.zzp.clop.read.Nun.nil;
 import me.zzp.clop.Any;
-import me.zzp.clop.Symbol;
+import me.zzp.clop.read.Symbol;
 
 public final class JavaClass extends JavaObject {
   private final String className;
 
-  public JavaClass(Object javaObject) {
-    super(javaObject);
-
-    Class javaClass;
-    if (javaObject instanceof Class) {
-      javaClass = (Class) javaObject;
-      prepare(javaClass);
-    } else {
-      javaClass = javaObject.getClass();
-    }
+  public JavaClass(Class<?> javaClass) {
+    super(javaClass);
+    prepare(javaClass);
     className = javaClass.getName().toString().replaceAll("\\.", " ");;
   }
 
@@ -24,7 +18,7 @@ public final class JavaClass extends JavaObject {
     if (thing instanceof Symbol) {
       return super.pass(thing);
     } else {
-      return nil;
+      return nil();
     }
   }
 
