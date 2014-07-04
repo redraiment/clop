@@ -16,24 +16,16 @@ public class Symbol implements Any {
     this.reference = Nun.nil();
   }
 
-//  public Symbol(String name, Symbol upLevel) {
-//    this.name = name.trim();
-//    this.upLevel = upLevel;
-//    this.reference = upLevel == null? Nun.nil(): upLevel.reference;
-//  }
-//
-//  public Symbol(String name, Any value) {
-//    this.name = name.trim();
-//    this.upLevel = null;
-//    this.reference = value;
-//  }
-
   public Symbol upLevel() {
     return upLevel;
   }
 
   public Any assign(Any value) {
     return reference = value;
+  }
+
+  public String name() {
+    return name;
   }
 
   public Any value() {
@@ -71,7 +63,7 @@ public class Symbol implements Any {
 
   @Override
   public String toString(int offset) {
-    return name;
+    return reference.toString(offset);
   }
 
   public static class SymbolAssign implements Any {
@@ -109,7 +101,12 @@ public class Symbol implements Any {
 
     @Override
     public String toString(int offset) {
-      return self.toString(offset).concat(" :");
+      return self.name().concat(" :");
+    }
+
+    @Override
+    public String toString() {
+      return toString(0);
     }
   }
 }

@@ -54,7 +54,11 @@ public abstract class AbstractAssociativeList<E> implements AssociativeList<E> {
 
   @Override
   public E get(String key) {
-    return get(indexOf(key));
+    try {
+      return get(Integer.parseInt(key));
+    } catch (NumberFormatException e) {
+      return get(indexOf(key));
+    }
   }
 
   @Override

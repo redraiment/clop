@@ -9,9 +9,9 @@ final class Lex implements Iterator<String>, Appendable {
   private final static Token[] MODEL = new Token[] {
     new Token(Type.Comment, "#.*"),
     new Token(Type.Value, "\"[^\\\\\"]*(?:\\\\.[^\\\\\"]*)*\""),
-    new Token(Type.Keyword, "[:'~@()\\[\\]{}]"),
+    new Token(Type.Keyword, "[:()\\[\\]{}]"),
     new Token(Type.EOS, "[\\\\][,\\r\\n]+"),
-    new Token(Type.Value, "[^\\s:~@,(){}\\[\\]'\"]+"),
+    new Token(Type.Value, "[^\\s:,(){}\\[\\]\"]+"),
     new Token(Type.EOL, "[,\\r\\n]+"),
     new Token(Type.EOS, "\\s+")
   };
